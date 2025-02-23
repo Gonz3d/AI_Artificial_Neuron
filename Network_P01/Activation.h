@@ -13,6 +13,7 @@ public:
     enum Type {
         Sigmoid,
         Gauss,
+        GaussInv,
         CosWave,
         LRelu,
         Triangle,
@@ -66,6 +67,22 @@ public:
     }
 };
 
+class GaussInv : public AFunction {
+public:
+    GaussInv() : AFunction(0.01, 1.0, 0.0) {}
+    
+    float eval(float z) {
+        return 1.0 - exp(- z * z );
+    }
+
+    float derivative(float z, float y) {
+        return 2.0 * (1 - y) * z;
+    }
+    
+    Type getType() {
+        return Type::GaussInv;
+    }
+};
 
 class CosWave : public AFunction {
 public:
