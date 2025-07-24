@@ -57,7 +57,7 @@ int main(int argc, const char * argv[]) {
     NeuralNetwork nn( image_size, { 1024, 1024, 1024, 1024, 10 }, &activation);
     
     int epochs = 100;
-    float learning_rate = activation.learnRate;
+    float learning_rate = activation.learnRate / 1000.0f;
 
     for (int epoch = 0; epoch < epochs; ++epoch) {
         float total_loss = 0.0;
@@ -67,8 +67,6 @@ int main(int argc, const char * argv[]) {
             std::vector<float> output = nn.forward(train_images[i]);
             std::vector<float> target = one_hot_encode(train_labels[i], 10);
 
-            nn.backward(train_images[i], target, learning_rate);
-
             int predicted_label = (int ) std::distance(output.begin(), std::max_element(output.begin(), output.end()));
             if (predicted_label == train_labels[i]) {
                 correct_predictions++;
@@ -77,6 +75,8 @@ int main(int argc, const char * argv[]) {
             for (int k = 0; k < 10; ++k) {
                 total_loss += 0.5 * (target[k] - output[k]) * (target[k] - output[k]);
             }
+            
+            nn.backward(train_images[i], target, learning_rate);
         }
     
 //        nn.printGradients();
